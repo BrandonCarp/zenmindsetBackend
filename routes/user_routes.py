@@ -1,7 +1,6 @@
-# routes/user_routes.py
 from flask import Blueprint, request, jsonify
-from models.user import User  # Import the User model
-from app import db  # Import db from app
+from models.user import User  
+from extensions import db
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -23,20 +22,3 @@ def register_user():
         return jsonify({"message": "User created", "id": new_user.id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-# Route for managing items (keep your existing item routes here)
-@item_bp.route("/", methods=["POST", "GET"])
-def manage_items():
-    if request.method == "POST":
-        description = request.json.get("description")
-        new_item = Item(description=description)
-        try:
-            db.session.add(new_item)
-            db.session.commit()
-            return jsonify({"message": "Item created", "id": new_item.id}), 201
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-
-    items = Item.query.order_by(Item.created_at).all()
-    items_list = [{"id": item.id, "description": item.description, "completed": item.completed} for item in items]
-    return jsonify(items_list)
