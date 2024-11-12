@@ -9,6 +9,8 @@
 # Mac / linux - python3 -m venv env 
 # Windows - python -m venv env }
 
+# then python app.py
+
 # Enter virtual environment : source env/bin/activate  (may have to use "chmod +x env/bin/activate" first)
 # Turn off with "deactivate"
 
