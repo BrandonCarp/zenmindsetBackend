@@ -32,3 +32,6 @@ Testing: Think about adding a tests/ directory for unit tests to ensure your bac
 Documentation: Keep your README.md updated with relevant information on how to set up and run your application.
 
 With this structure and the plans for future integration, you're well on your way to creating a robust backend for your application! If you need help with specific features or implementation details, feel free to ask!
+
+
+# Installing Flask-Bcrypt
