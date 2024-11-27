@@ -1,4 +1,13 @@
-# config.py
 class Config:
-    SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False  # Optional: Disable track modifications for performance
+    DEBUG = False
+    TESTING = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+
+class TestingConfig(Config):
+    TESTING = True
+
+class ProductionConfig(Config):
+    pass

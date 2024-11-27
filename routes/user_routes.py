@@ -1,11 +1,10 @@
 from flask import Blueprint, request, jsonify
 from models.user import User  
-from extensions import db
+from extensions import db, bcrypt
 
 user_bp = Blueprint('user_bp', __name__)
 
-
-# User Registration
+# ** User Registration Bloop**
 @user_bp.route("/register", methods=["POST"])
 def register_user():
     user_name = request.json.get("username")
@@ -17,7 +16,10 @@ def register_user():
     if existing_user:
         return jsonify({"error": "Email is already in use :("})
 
-    new_user = User(user_name=user_name, password=password, email=email)
+    #Hash pass
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    new_user = User(user_name=user_name, password=hashed_password, email=email)
 
     try:
         db.session.add(new_user)
@@ -37,4 +39,12 @@ def fetch_user():
     
     if not existing_user:
         return jsonify({"error": "That User Name does not exist"})
+    
+
+    #Check if pass matches hash pass
+    if bcrypt.check_password_hash(existing_user.password, password):
+        return jsonify({"message": "Login Succesfull"})
+    else:
+        return jsonify({"message": "Invlaid Password"})
+
     
