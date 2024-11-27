@@ -35,3 +35,5 @@ With this structure and the plans for future integration, you're well on your wa
 
 
 # Installing Flask-Bcrypt
+pip install flask-bcrypt
+https://www.geeksforgeeks.org/password-hashing-with-bcrypt-in-flask/
