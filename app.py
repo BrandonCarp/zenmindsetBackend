@@ -7,7 +7,7 @@ from routes import user_bp
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)  # Enable instance-relative config
-    CORS(app)
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
     app.config.from_object(Config)  # Default config (e.g., development)
     app.config.from_pyfile('config.py', silent=True)  # Load sensitive config from instance/config.py
     db.init_app(app)
