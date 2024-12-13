@@ -15,7 +15,7 @@ def register_user():
     if existing_user:
         return jsonify({"error": "Email is already in use "})
 
-    #Hass pass
+    #Hash pass
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     new_user = User(user_name=user_name, password=hashed_password, email=email)
@@ -41,9 +41,34 @@ def fetch_user():
 
     # Checkin if pass matches hass pass
     if bcrypt.check_password_hash(existing_user.password, password):
-        return jsonify({"message": "Login Succesfull"})
+        return True
+        # return jsonify({"message": "Login Successful", "user": {"id": existing_user.id, "name": user.user_name}})
+
 
     else:
         return jsonify({"message": "invalid Password"})
+    
+
+
+# User log out
+@user_bp.route("/logout", methods=["POST"])
+def fetch_user():
+    user_name = request.json.get("username")
+    password = request.json.get("password")
+
+    existing_user = User.query.filter_by(username=user_name).first()
+
+    if not existing_user:
+        return jsonify({"error": "That User Name does not exist"})
+
+    # Checkin if pass matches hass pass
+    if bcrypt.check_password_hash(existing_user.password, password):
+        return True
+        # return jsonify({"message": "Login Successful", "user": {"id": existing_user.id, "name": user.user_name}})
+
+
+    else:
+        return jsonify({"message": "invalid Password"})
+    
     
 
