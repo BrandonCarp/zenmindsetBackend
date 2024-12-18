@@ -72,3 +72,4 @@ def fetch_user():
     
     
 
+# session.clear()

@@ -1,0 +1,9 @@
+User logs in, once confirmed username / pass match in db.
+Send relevant user information (in a cookie ?) to the front end to than display
+ any particular user settings
+
+1. Confirm cookie sends relevant user info 
+2.  And how does it stay active ?
+3. Log out ? Session end ? what happens to cookie ?
+3. Forwarding user to logged in page
+

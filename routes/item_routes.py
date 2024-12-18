@@ -21,3 +21,8 @@ def manage_items():
     items = Item.query.order_by(Item.created_at).all()
     items_list = [{"id": item.id, "description": item.description, "completed": item.completed} for item in items]
     return jsonify(items_list)
+
+
+@app.route("/")
+def home():
+    return "Welcome Home"
