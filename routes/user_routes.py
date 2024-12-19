@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from models.user import User  
 from extensions import db, bcrypt
 
@@ -22,7 +22,7 @@ def register_user():
 
     try:
         db.session.add(new_user)
-        db.session.comimt()
+        db.session.commit()
         return jsonify({"message": "User created", "id": new_user.id}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -36,40 +36,59 @@ def fetch_user():
 
     existing_user = User.query.filter_by(username=user_name).first()
 
-    if not existing_user:
-        return jsonify({"error": "That User Name does not exist"})
-
-    # Checkin if pass matches hass pass
-    if bcrypt.check_password_hash(existing_user.password, password):
-        return True
-        # return jsonify({"message": "Login Successful", "user": {"id": existing_user.id, "name": user.user_name}})
+    if not existing_user or not bcrypt.check_password_hash(existing_user.password, password):
+        return jsonify({"error": "Invalid username or password"}), 401
 
 
-    else:
-        return jsonify({"message": "invalid Password"})
+    session['user_id'] = existing_user.id
+
+    return jsonify({"message": "Login successful", "user_id": existing_user.id})
+
     
 
 
 # User log out
 @user_bp.route("/logout", methods=["POST"])
-def fetch_user():
-    user_name = request.json.get("username")
-    password = request.json.get("password")
-
-    existing_user = User.query.filter_by(username=user_name).first()
-
-    if not existing_user:
-        return jsonify({"error": "That User Name does not exist"})
-
-    # Checkin if pass matches hass pass
-    if bcrypt.check_password_hash(existing_user.password, password):
-        return True
-        # return jsonify({"message": "Login Successful", "user": {"id": existing_user.id, "name": user.user_name}})
-
-
-    else:
-        return jsonify({"message": "invalid Password"})
-    
+def logout_user():
+    session.pop('user_id', None)
+    return jsonify({"message": "Logged out successfully"}), 200
     
 
-# session.clear()
+
+# Pseudocode for handling front end user data ie: posts ect 
+# @user_bp.route("/profile", methods=["GET"])
+# def get_profile():
+#     user_id = session.get('user_id')
+#     if not user_id:
+#         return jsonify({"error": "Unauthorized"}), 401
+    
+#     user = User.query.get(user_id)
+#     if not user:
+#         return jsonify({"error": "User not found"}), 404
+
+#     # Fetch additional data like posts
+#     posts = [{"title": "Post 1"}, {"title": "Post 2"}]  # Replace with actual query logic
+#     return jsonify({
+#         "username": user.user_name,
+#         "email": user.email,
+#         "posts": posts
+#     })
+
+
+# Fetching blogs
+
+# @user_bp.route('/profile/blogs', methods=['GET'])
+# def get_user_blogs():
+#     # Ensure the user is logged in by checking the session
+#     if 'user_id' not in session:
+#         return jsonify({"error": "Unauthorized"}), 401
+    
+#     user_id = session['user_id']
+    
+#     # Query the blogs related to the current user
+#     blogs = Blog.query.filter_by(user_id=user_id).all()  # Assuming a Blog model with a `user_id` field
+    
+#     # Convert blogs to a dictionary or any required format to send back as JSON
+#     blog_list = [{"id": blog.id, "title": blog.title, "content": blog.content} for blog in blogs]
+
+#     return jsonify({"blogs": blog_list})
