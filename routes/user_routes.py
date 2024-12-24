@@ -1,8 +1,14 @@
 from flask import Blueprint, request, jsonify, session
 from models.user import User  
 from extensions import db, bcrypt
+from flask_cors import CORS
 
 user_bp = Blueprint('user_bp', __name__)
+
+
+@user_bp.route('/')
+def home():
+    return jsonify({"message": "Welcome to the API!"})
 
 # ** User Registration **
 @user_bp.route('/register', methods=['POST'])
